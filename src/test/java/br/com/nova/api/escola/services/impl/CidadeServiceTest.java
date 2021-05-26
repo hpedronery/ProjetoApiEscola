@@ -18,6 +18,7 @@ import br.com.nova.api.escola.model.Cidade;
 import org.mockito.Mockito;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import java.lang.reflect.Array;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -49,10 +50,12 @@ public class CidadeServiceTest {
         return TestUtils.getMock(MOCK_FOLDER, MOCK_OBJECT, Cidade.class);
     }
 
-
+    /**
+     * Abaixo seguem os testes para os metodos de busca.
+     */
 
     @Test
-    public void testarBuscaPorId_RegistroExiste() {
+    public void testaBuscaPorId_RegistroExiste() {
         Cidade cidade = getMock();
         when(cidadeRepository.findById(cidade.getId())).thenReturn(Optional.of(cidade));
         Cidade cidadeBuscada = service().buscaCidadePeloId(cidade.getId());
@@ -60,7 +63,7 @@ public class CidadeServiceTest {
     }
 
     @Test
-    public void testarBuscaPorId_RegistroNaoExiste() {
+    public void testaBuscaPorId_RegistroNaoExiste() {
         Cidade cidade = getMock();
         when(cidadeRepository.findById(cidade.getId())).thenReturn(Optional.empty());
         assertThrows(NotFoundException.class, () -> service().buscaCidadePeloId(cidade.getId()));
@@ -73,19 +76,22 @@ public class CidadeServiceTest {
         when(cidadeRepository.findAll(Mockito.any())).thenReturn(Collections.singletonList(cidade));
         cidadeFetchRequest.setNome(cidade.getNome());
         cidadeFetchRequest.setEstado(cidade.getEstado());
-        List<Cidade> cidades = service().buscaListaDeCidades(new CidadeFetchRequest());
+        List<Cidade> cidades = service().buscaListaDeCidades(cidadeFetchRequest);
         assertEquals(1, cidades.size());
         assertEquals(cidade.getId(), cidades.get(0).getId());
         assertEquals(cidade.getEstado().getNome(), cidades.get(0).getEstado().getNome());
     }
 
     @Test
-    public void testarSalvarCidade() {
-        Cidade cidade = getMock();
-        when(cidadeRepository.save(Mockito.any())).thenReturn(cidade);
-        Cidade cidadeSalva = service().criaCidade(new CidadeCreateRequest());
-        assertEquals(cidade.getId(), cidadeSalva.getId());
+    public void testarBuscaCidadesPeloNomeEPeloEstado_RegistroNaoExiste() {
+        when(cidadeRepository.findAll(Mockito.any())).thenReturn(null);
+        List<Cidade> cidades = service().buscaListaDeCidades(new CidadeFetchRequest());
+        assertThrows(NullPointerException.class, () -> cidades.get(0));
     }
+
+    /**
+     * Abaixo seguem os testes para os métodos de alteração.
+     */
 
     @Test
     public void testaAlterarNomeCidade_CidadeExiste() {
@@ -118,12 +124,28 @@ public class CidadeServiceTest {
     }
 
     @Test
-    public void testaAlterarEstadoCidade_CidadeNaoExiste() {
+    public void testaAlterarEstadoCidade_EstadoNaoEInformado() {
         Cidade cidade = getMock();
         when(cidadeRepository.findById(cidade.getId())).thenReturn(Optional.empty());
         when(cidadeRepository.save(Mockito.any())).thenReturn(cidade);
         assertThrows(NotFoundException.class, () -> service().alteraEstadoCidade(cidade.getId(), new CidadeEstadoChangeRequest()));
     }
+
+    /**
+     * Abaixo segue o teste para o metodo de criar.
+     */
+
+    @Test
+    public void testaCriaCidade() {
+        Cidade cidade = getMock();
+        when(cidadeRepository.save(Mockito.any())).thenReturn(cidade);
+        Cidade cidadeSalva = service().criaCidade(new CidadeCreateRequest());
+        assertEquals(cidade.getId(), cidadeSalva.getId());
+    }
+
+    /**
+     * Abaixo seguem os testes para o metodo de deletar.
+     */
 
     @Test
     public void testaDeletarCidade_CidadeExiste() {

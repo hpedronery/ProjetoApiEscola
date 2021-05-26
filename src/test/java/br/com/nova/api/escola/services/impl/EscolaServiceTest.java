@@ -51,12 +51,20 @@ public class EscolaServiceTest {
     protected static Escola getMockEscola() {
         return TestUtils.getMock(MOCK_FOLDER_ESCOLA, MOCK_OBJECT_ESCOLA, Escola.class);
     }
+    /**
+     * Retorna um Mock de {@link Cidade} completo e válido
+     * @return objeto {@link Cidade} completo e válido
+     */
     protected static Cidade getMockCidade() {
         return TestUtils.getMock(MOCK_FOLDER_CIDADE, MOCK_OBJECT_CIDADE, Cidade.class);
     }
 
+    /**
+     * Abaixo seguem os testes para os metodos de busca.
+     */
+
     @Test
-    public void testarBuscaPorId_RegistroExiste() {
+    public void testaBuscaEscolaPorId_RegistroExiste() {
         Escola escola = getMockEscola();
         when(escolaRepository.findById(escola.getId())).thenReturn(Optional.of(escola));
         Escola escolaBuscada = service().buscaEscolaPeloId(escola.getId());
@@ -64,7 +72,7 @@ public class EscolaServiceTest {
     }
 
     @Test
-    public void testarBuscaPorId_RegistroNaoExiste() {
+    public void testarBuscaEscolaPorId_RegistroNaoExiste() {
         Escola escola = getMockEscola();
         when(escolaRepository.findById(escola.getId())).thenReturn(Optional.empty());
         assertThrows(NotFoundException.class, () -> service().buscaEscolaPeloId(escola.getId()));
@@ -86,9 +94,8 @@ public class EscolaServiceTest {
     @Test
     public void testarBuscaEscolaPorCidadeId_RegistroExiste() {
         Escola escola = getMockEscola();
-        Cidade cidade = getMockCidade();
         List<Escola> escolas = new ArrayList<>();
-        when(escolaRepository.findByCidadeId(escola.getCidade().getId())).thenReturn(escolas);
+        when(escolaRepository.findByCidadeId(escola.getCidade().getId())).thenReturn(Collections.singletonList(escola));
         escolas.add(service().buscaEscolaPelaCidadeId(escola.getCidade().getId()).get(0));
         assertEquals(escola.getCidade().getId(), escolas.get(0).getCidade().getId());
     }
@@ -96,18 +103,13 @@ public class EscolaServiceTest {
     @Test
     public void testarBuscaEscolaPorCidadeId_RegistroNaoExiste() {
         Escola escola = getMockEscola();
-        List<Escola> escolas = new ArrayList<>();
-        when(escolaRepository.findByCidadeId(escola.getCidade().getId())).thenReturn(escolas);
+        when(escolaRepository.findByCidadeId(escola.getCidade().getId())).thenReturn(Collections.singletonList(escola));
         assertThrows(NotFoundException.class, () -> service().buscaEscolaPeloId(escola.getId()));
     }
 
-    @Test
-    public void testarSalvarEscola() {
-        Escola escola = getMockEscola();
-        when(escolaRepository.save(Mockito.any())).thenReturn(escola);
-        Escola escolaSalva = service().criaEscola(new EscolaCreateRequest());
-        assertEquals(escola.getId(), escolaSalva.getId());
-    }
+    /**
+     * Abaixo seguem os testes para os métodos de alteração.
+     */
 
     @Test
     public void testaAlterarNomeEscola_EscolaExiste() {
@@ -131,11 +133,9 @@ public class EscolaServiceTest {
 
     @Test
     public void testaAlterarCidadeEscola_EscolaExiste() {
-
         Escola escola = getMockEscola();
         Cidade cidadeNova = getMockCidade();
         when(cidadeRepository.findById(cidadeNova.getId())).thenReturn(Optional.of(cidadeNova));
-        when(cidadeRepository.save(Mockito.any())).thenReturn(cidadeNova);
         when(escolaRepository.findById(escola.getId())).thenReturn(Optional.of(escola));
         when(escolaRepository.save(Mockito.any())).thenReturn(escola);
         Escola escolaSalva = service().alteraCidadeEscola(escola.getId(), cidadeNova.getId());
@@ -170,6 +170,22 @@ public class EscolaServiceTest {
         assertThrows(NotFoundException.class, () -> service().alteraRedeEscola(escola.getId(),
                 new EscolaRedeChangeRequest()));
     }
+
+    /**
+     * Abaixo segue o teste para o metodo de criar.
+     */
+
+    @Test
+    public void testarSalvarEscola() {
+        Escola escola = getMockEscola();
+        when(escolaRepository.save(Mockito.any())).thenReturn(escola);
+        Escola escolaSalva = service().criaEscola(new EscolaCreateRequest());
+        assertEquals(escola.getId(), escolaSalva.getId());
+    }
+
+    /**
+     * Abaixo seguem os testes para o metodo de deletar.
+     */
 
     @Test
     public void testaDeletarEscola_EscolaExiste() {

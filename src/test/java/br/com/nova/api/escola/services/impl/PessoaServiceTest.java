@@ -29,8 +29,6 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 public class PessoaServiceTest {
 
-    private static final String MOCK_FOLDER_ESCOLA = "mocks/escola";
-    private static final String MOCK_OBJECT_ESCOLA = "escola.json";
     private static final String MOCK_FOLDER_PESSOA = "mocks/pessoa";
     private static final String MOCK_OBJECT_PESSOA = "pessoa.json";
 
@@ -51,24 +49,10 @@ public class PessoaServiceTest {
     protected static Pessoa getMockPessoa() {
         return TestUtils.getMock(MOCK_FOLDER_PESSOA, MOCK_OBJECT_PESSOA, Pessoa.class);
     }
-    protected static Escola getMockEscola() {
-        return TestUtils.getMock(MOCK_FOLDER_ESCOLA, MOCK_OBJECT_ESCOLA, Escola.class);
-    }
 
-    @Test
-    public void consistenciaDosDados() {
-        Pessoa pessoa = getMockPessoa();
-        assertEquals(pessoa.getId(), 4);
-        assertEquals(pessoa.getCorpo().getNome(), "Corpo Docente");
-        assertEquals(pessoa.getNome(), "Fulano");
-        assertEquals(pessoa.getSexo().getNome(), "Masculino");
-        assertEquals(pessoa.getEscola().getId(), 3);
-        assertEquals(pessoa.getEscola().getRedeEscola().getNome(), "Escola Municipal");
-        assertEquals(pessoa.getEscola().getNome(), "Escola");
-        assertEquals(pessoa.getEscola().getCidade().getNome(), "Ubá");
-        assertEquals(pessoa.getEscola().getCidade().getEstado().getNome(), "Minas Gerais");
-        assertEquals(pessoa.getEscola().getCidade().getId(), 2);
-    }
+    /**
+     * Abaixo seguem os testes para os metodos de busca.
+     */
 
     @Test
     public void testarBuscaPorId_RegistroExiste() {
@@ -88,9 +72,7 @@ public class PessoaServiceTest {
     @Test
     public void testarBuscaPorEscolaId_RegistroExiste() {
         Pessoa pessoa = getMockPessoa();
-        when(pessoaRepository.findByEscolaId(pessoa.getEscola().getId())).thenReturn(Optional.empty());
-        System.out.println("SO PRA SABE");
-        System.out.println(service().buscaPessoaPelaEscolaId(pessoa.getEscola().getId()).get(0).getId());
+        when(pessoaRepository.findByEscolaId(pessoa.getEscola().getId())).thenReturn(Optional.of(Collections.singletonList(pessoa)));
         List<Pessoa> pessoaBuscada = service().buscaPessoaPelaEscolaId(pessoa.getEscola().getId());
         assertEquals(pessoa.getId(), pessoaBuscada.get(0).getId());
     }

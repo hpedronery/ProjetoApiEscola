@@ -1,6 +1,7 @@
 package br.com.nova.api.escola.services.impl;
 
 import br.com.nova.api.escola.dtos.pessoa.*;
+import br.com.nova.api.escola.exceptions.GenericException;
 import br.com.nova.api.escola.exceptions.NotFoundException;
 import br.com.nova.api.escola.model.Pessoa;
 import br.com.nova.api.escola.repositories.EscolaRepository;
@@ -10,6 +11,7 @@ import br.com.nova.api.escola.services.PessoaService;
 import br.com.nova.api.escola.utils.MessageUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -111,7 +113,12 @@ public class PessoaServiceImpl implements PessoaService {
 
     @Override
     public void deletaPessoa(long pessoaId) {
-        Pessoa pessoa = buscaPessoaPeloId(pessoaId);
-        pessoaRepository.delete(pessoa);
+        try {
+            pessoaRepository.deleteById(pessoaId);
+        }catch (EmptyResultDataAccessException ex) {
+            throw new NotFoundException(MessageUtils.buscarMensagem("pessoa.deletar.nao.encontrada", pessoaId));
+        } catch (GenericException ex) {
+            throw new GenericException(MessageUtils.buscarMensagem("response.code500"));
+        }
     }
 }
