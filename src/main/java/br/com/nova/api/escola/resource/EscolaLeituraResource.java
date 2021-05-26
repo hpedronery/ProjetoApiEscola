@@ -45,22 +45,8 @@ public class EscolaLeituraResource {
             value = {@ApiResponse(code = 200, message = "Escolas(s) consultada(s) com sucesso.")}
     )
     @GetMapping
-    public Response<List<EscolaRetornoDto>> buscarEscolas(EscolaFetchRequest escolaFetchRequest) {
-        List<Escola> escolas = escolaService.buscaListaEscolas(escolaFetchRequest);
-        return Response.ok(modelMapper.map(escolas, new TypeToken<List<EscolaRetornoDto>>() {
-        }.getType()));
-    }
-
-    @ApiOperation(
-            value = "Busca uma escola pelo id da cidade.",
-            notes = "Recurso responsável por consultar uma lista de escolas de acordo com o parâmetro da requisição."
-    )
-    @ApiResponses(
-            value = {@ApiResponse(code = 200, message = "Escola(s) consultada(s) com sucesso.")}
-    )
-    @GetMapping("/cidadeId/{cidadeId}")
-    public Response<List<EscolaRetornoDto>> buscaEscolaCidadeId(@PathVariable long cidadeId) {
-        List<Escola> escolas = escolaService.buscarPelaCidadeId(cidadeId);
+    public Response<List<EscolaRetornoDto>> buscaEscolas(EscolaFetchRequest escolaFetchRequest) {
+        List<Escola> escolas = escolaService.buscaListaEscolasPeloNomeOuRedeEscolar(escolaFetchRequest);
         return Response.ok(modelMapper.map(escolas, new TypeToken<List<EscolaRetornoDto>>() {
         }.getType()));
     }
@@ -74,7 +60,21 @@ public class EscolaLeituraResource {
     )
     @GetMapping("/escolaId/{escolaId}")
     public Response<EscolaRetornoDto> buscaEscolaPeloId(@PathVariable long escolaId) {
-        Escola escola = escolaService.buscarPeloId(escolaId);
+        Escola escola = escolaService.buscaEscolaPeloId(escolaId);
         return Response.ok(modelMapper.map(escola, EscolaRetornoDto.class));
+    }
+
+    @ApiOperation(
+            value = "Busca uma escola pelo id da cidade.",
+            notes = "Recurso responsável por consultar uma lista de escolas de acordo com o parâmetro da requisição."
+    )
+    @ApiResponses(
+            value = {@ApiResponse(code = 200, message = "Escola(s) consultada(s) com sucesso.")}
+    )
+    @GetMapping("/cidadeId/{cidadeId}")
+    public Response<List<EscolaRetornoDto>> buscaEscolaPelaCidadeId(@PathVariable long cidadeId) {
+        List<Escola> escolas = escolaService.buscaEscolaPelaCidadeId(cidadeId);
+        return Response.ok(modelMapper.map(escolas, new TypeToken<List<EscolaRetornoDto>>() {
+        }.getType()));
     }
 }

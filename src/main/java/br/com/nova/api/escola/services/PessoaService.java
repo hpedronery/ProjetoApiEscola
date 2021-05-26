@@ -6,21 +6,21 @@ import br.com.nova.api.escola.model.Pessoa;
 import java.util.List;
 
 public interface PessoaService {
-    List<Pessoa> buscarListaPessoas(PessoaFetchRequest pessoaFetchRequest);
+    List<Pessoa> buscaListaPessoas(PessoaFetchRequest pessoaFetchRequest);
 
-    List<Pessoa> buscarPelaEscolaId(long escolaId);
+    List<Pessoa> buscaPessoaPelaEscolaId(long escolaId);
 
-    Pessoa buscarPeloId(long pessoaId);
+    Pessoa buscaPessoaPeloId(long pessoaId);
 
-    Pessoa salvarPessoa(PessoaCreateRequest pessoaCreateRequest);
+    Pessoa criaPessoa(PessoaCreateRequest pessoaCreateRequest);
 
-    Pessoa alterarNomePessoa(long pessoaId, PessoaNomeChangeRequest pessoaNomeChangeRequest);
+    Pessoa alteraNomePessoa(long pessoaId, PessoaNomeChangeRequest pessoaNomeChangeRequest);
 
-    Pessoa alterarCorpoPessoa(long pessoaId, PessoaCorpoChangeRequest pessoaCorpoChangeRequest);
+    Pessoa alteraCorpoEscolarPessoa(long pessoaId, PessoaCorpoChangeRequest pessoaCorpoChangeRequest);
 
-    Pessoa alterarDataNascimento(long pessoaId, PessoaDataNascimentoChangeRequest pessoaDataNascimentoChangeRequest);
+    Pessoa alteraDataNascimentoPessoa(long pessoaId, PessoaDataNascimentoChangeRequest pessoaDataNascimentoChangeRequest);
 
-    Pessoa alterarSexoPessoa(long pessoaId, PessoaSexoChangeRequest pessoaSexoChangeRequest);
+    Pessoa alteraSexoPessoa(long pessoaId, PessoaSexoChangeRequest pessoaSexoChangeRequest);
 
-    void deletarPessoa(long pessoaId);
+    void deletaPessoa(long pessoaId);
 }

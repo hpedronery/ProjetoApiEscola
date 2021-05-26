@@ -46,8 +46,8 @@ public class PessoaLeituraResource {
             value = {@ApiResponse(code = 200, message = "Pessoa(s) consultada(s) com sucesso.")}
     )
     @GetMapping
-    public Response<List<PessoaRetornoDto>> buscarPessoas(PessoaFetchRequest pessoaFetchRequest) {
-        List<Pessoa> pessoas = pessoaService.buscarListaPessoas(pessoaFetchRequest);
+    public Response<List<PessoaRetornoDto>> buscaPessoas(PessoaFetchRequest pessoaFetchRequest) {
+        List<Pessoa> pessoas = pessoaService.buscaListaPessoas(pessoaFetchRequest);
         return Response.ok(modelMapper.map(pessoas, new TypeToken<List<PessoaRetornoDto>>() {
         }.getType()));
     }
@@ -61,7 +61,7 @@ public class PessoaLeituraResource {
     )
     @GetMapping("/escolaId/{escolaId}")
     public Response<List<PessoaRetornoDto>> buscaPessoaEscolaId(@PathVariable long escolaId) {
-        List<Pessoa> pessoas = pessoaService.buscarPelaEscolaId(escolaId);
+        List<Pessoa> pessoas = pessoaService.buscaPessoaPelaEscolaId(escolaId);
         return Response.ok(modelMapper.map(pessoas, new TypeToken<List<PessoaRetornoDto>>() {
         }.getType()));
     }
@@ -75,7 +75,7 @@ public class PessoaLeituraResource {
     )
     @GetMapping("/pessoaId/{pessoaId}")
     public Response<PessoaRetornoDto> buscaPessoaPeloId(@PathVariable long pessoaId) {
-        Pessoa pessoa = pessoaService.buscarPeloId(pessoaId);
+        Pessoa pessoa = pessoaService.buscaPessoaPeloId(pessoaId);
         return Response.ok(modelMapper.map(pessoa, PessoaRetornoDto.class));
     }
 }

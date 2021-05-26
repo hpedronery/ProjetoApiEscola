@@ -33,10 +33,18 @@ public class CidadeServiceImpl implements CidadeService {
         this.modelMapper = modelMapper;
     }
 
+    /**
+     * Abaixo seguem metodos de busca, eles utilizam o identificador long quando se busca pelo id ou uma classe dto
+     * quando se busca por algum argumento.
+     *
+     * @return retorna o(s) objeto(s) da busca.
+     */
+
     @Override
-    public Cidade buscarPeloId(long cidadeId) {
+    public Cidade buscaCidadePeloId(long cidadeId) {
         return cidadeRepository.findById(cidadeId)
-                .orElseThrow(() -> new NotFoundException(MessageUtils.buscarMensagem("cidade.nao.encontrada"), cidadeId));
+                .orElseThrow(() -> new NotFoundException(MessageUtils
+                        .buscarMensagem("cidade.nao.encontrada"), cidadeId));
     }
 
     @Override
@@ -45,28 +53,47 @@ public class CidadeServiceImpl implements CidadeService {
         return cidadeRepository.findAll(cidadeSpecification);
     }
 
-    @Override
-    public Cidade salvarCidade(@Valid CidadeCreateRequest cidadeCreateRequest) {
-        Cidade cidade = modelMapper.map(cidadeCreateRequest, Cidade.class);
-        return cidadeRepository.save(cidade);
-    }
+    /**
+     * Abaixo seguem metodos de alteração, eles utilizam o identificador long quando se busca pelo id ou uma classe
+     * dto quando se busca por algum argumento.
+     *
+     * @return retorna o objeto alterado.
+     */
 
     @Override
-    public Cidade alterarNomeCidade(long cidadeId, CidadeNomeChangeRequest cidadeNomeChangeRequest) {
-        Cidade cidade = buscarPeloId(cidadeId);
+    public Cidade alteraNomeCidade(long cidadeId, CidadeNomeChangeRequest cidadeNomeChangeRequest) {
+        Cidade cidade = buscaCidadePeloId(cidadeId);
         cidade.setNome(cidadeNomeChangeRequest.getNome());
         return cidadeRepository.save(cidade);
     }
 
     @Override
-    public Cidade alterarEstadoCidade(long cidadeId, CidadeEstadoChangeRequest cidadeEstadoChangeRequest) {
-        Cidade cidade = buscarPeloId(cidadeId);
+    public Cidade alteraEstadoCidade(long cidadeId, CidadeEstadoChangeRequest cidadeEstadoChangeRequest) {
+        Cidade cidade = buscaCidadePeloId(cidadeId);
         cidade.setEstado(cidadeEstadoChangeRequest.getEstado());
         return cidadeRepository.save(cidade);
     }
 
+    /**
+     * Abaixo segue o metodo de criar, ele recebe a classe dto com os dados de criação e cria o objeto.
+     *
+     * @return retorna o objeto criado.
+     */
+
     @Override
-    public void deletarCidade(long cidadeId) {
+    public Cidade criaCidade(@Valid CidadeCreateRequest cidadeCreateRequest) {
+        Cidade cidade = modelMapper.map(cidadeCreateRequest, Cidade.class);
+        return cidadeRepository.save(cidade);
+    }
+
+    /**
+     * Abaixo segue o metodo de deletar, ele recebe a classe dto com os dados de deleção e deleta o objeto.
+     *
+     * @return retorna o objeto deletado.
+     */
+
+    @Override
+    public void deletaCidade(long cidadeId) {
         try {
             cidadeRepository.deleteById(cidadeId);
         } catch (EmptyResultDataAccessException ex) {

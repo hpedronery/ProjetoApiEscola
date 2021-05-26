@@ -20,6 +20,10 @@ import java.time.LocalDate;
 @RequestMapping(value = "/pessoas")
 public class PessoaEscritaResource {
 
+    /**
+     * Classe responsável por alterar/criar/deletar dados de uma pessoa
+     */
+
     private final PessoaService pessoaService;
     private final ModelMapper modelMapper;
 
@@ -30,20 +34,6 @@ public class PessoaEscritaResource {
     }
 
     @ApiOperation(
-            value = "Insere/Cria uma nova Pessoa.",
-            notes = "Recurso responsável por Inserir/Criar uma nova Pessoa."
-    )
-    @ApiResponses(
-            value = {@ApiResponse(code = 201, message = "Pessoa inserida/criada com sucesso."),
-                    @ApiResponse(code = 400, message = "Erros de validação na requisição")})
-    @ResponseStatus(value = HttpStatus.CREATED)
-    @PostMapping
-    public Response<PessoaRetornoDto> criar(@RequestBody PessoaCreateRequest pessoaCreateRequest) {
-        Pessoa pessoa = pessoaService.salvarPessoa(pessoaCreateRequest);
-        return Response.created(modelMapper.map(pessoa, PessoaRetornoDto.class));
-    }
-
-    @ApiOperation(
             value = "Altera o nome de uma Pessoa.",
             notes = "Recurso responsável por alterar o nome de uma Pessoa."
     )
@@ -51,9 +41,9 @@ public class PessoaEscritaResource {
             value = {@ApiResponse(code = 200, message = "Nome da pessoa alterado com sucesso."),
                     @ApiResponse(code = 404, message = "Recursos necessários inválidos ou não encontrados.")})
     @PatchMapping("/alterarNome/{pessoaId}")
-    public Response<String> alterarNome(@PathVariable long pessoaId,
+    public Response<String> alteraNomePessoa(@PathVariable long pessoaId,
                                         @RequestBody PessoaNomeChangeRequest pessoaNomeChangeRequest) {
-        Pessoa pessoa = pessoaService.alterarNomePessoa(pessoaId, pessoaNomeChangeRequest);
+        Pessoa pessoa = pessoaService.alteraNomePessoa(pessoaId, pessoaNomeChangeRequest);
         return Response.ok(pessoa.getNome());
     }
 
@@ -65,9 +55,9 @@ public class PessoaEscritaResource {
             value = {@ApiResponse(code = 200, message = "Corpo da pessoa alterado com sucesso."),
                     @ApiResponse(code = 404, message = "Recursos necessários inválidos ou não encontrados.")})
     @PatchMapping("/alterarCorpo/{pessoaId}")
-    public Response<String> alterarCorpo(@PathVariable long pessoaId,
+    public Response<String> alteraCorpoEscolarPessoa(@PathVariable long pessoaId,
                                          @RequestBody PessoaCorpoChangeRequest pessoaCorpoChangeRequest) {
-        Pessoa pessoa = pessoaService.alterarCorpoPessoa(pessoaId, pessoaCorpoChangeRequest);
+        Pessoa pessoa = pessoaService.alteraCorpoEscolarPessoa(pessoaId, pessoaCorpoChangeRequest);
         return Response.ok(pessoa.getCorpo().getNome());
     }
 
@@ -79,9 +69,9 @@ public class PessoaEscritaResource {
             value = {@ApiResponse(code = 200, message = "Sexo da pessoa alterado com sucesso."),
                     @ApiResponse(code = 404, message = "Recursos necessários inválidos ou não encontrados.")})
     @PatchMapping("/alterarSexo/{pessoaId}")
-    public Response<String> alterarSexo(@PathVariable long pessoaId,
+    public Response<String> alteraSexoPessoa(@PathVariable long pessoaId,
                                         @RequestBody PessoaSexoChangeRequest pessoaSexoChangeRequest) {
-        Pessoa pessoa = pessoaService.alterarSexoPessoa(pessoaId, pessoaSexoChangeRequest);
+        Pessoa pessoa = pessoaService.alteraSexoPessoa(pessoaId, pessoaSexoChangeRequest);
         return Response.ok(pessoa.getSexo().getNome());
     }
 
@@ -93,10 +83,24 @@ public class PessoaEscritaResource {
             value = {@ApiResponse(code = 200, message = "Data de nascimento alterada com sucesso."),
                     @ApiResponse(code = 404, message = "Recursos necessários inválidos ou não encontrados.")})
     @PatchMapping("/alterarDataNascimento/{pessoaId}")
-    public Response<LocalDate> alterarDataNascimento(@PathVariable long pessoaId,
+    public Response<LocalDate> alteraDataNascimentoPessoa(@PathVariable long pessoaId,
                                                      @RequestBody PessoaDataNascimentoChangeRequest pessoaDataNascimentoChangeRequest) {
-        Pessoa pessoa = pessoaService.alterarDataNascimento(pessoaId, pessoaDataNascimentoChangeRequest);
+        Pessoa pessoa = pessoaService.alteraDataNascimentoPessoa(pessoaId, pessoaDataNascimentoChangeRequest);
         return Response.ok(pessoa.getDataNascimento());
+    }
+
+    @ApiOperation(
+            value = "Insere/Cria uma nova Pessoa.",
+            notes = "Recurso responsável por Inserir/Criar uma nova Pessoa."
+    )
+    @ApiResponses(
+            value = {@ApiResponse(code = 201, message = "Pessoa inserida/criada com sucesso."),
+                    @ApiResponse(code = 400, message = "Erros de validação na requisição")})
+    @ResponseStatus(value = HttpStatus.CREATED)
+    @PostMapping
+    public Response<PessoaRetornoDto> criaPessoa(@RequestBody PessoaCreateRequest pessoaCreateRequest) {
+        Pessoa pessoa = pessoaService.criaPessoa(pessoaCreateRequest);
+        return Response.created(modelMapper.map(pessoa, PessoaRetornoDto.class));
     }
 
     @ApiOperation(
@@ -108,8 +112,8 @@ public class PessoaEscritaResource {
                     @ApiResponse(code = 404, message = "Recursos necessários inválidos ou não encontrados.")})
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @DeleteMapping("/{pessoaId}")
-    public Response<Void> deletar(@PathVariable long pessoaId) {
-        pessoaService.deletarPessoa(pessoaId);
+    public Response<Void> deletaPessoa(@PathVariable long pessoaId) {
+        pessoaService.deletaPessoa(pessoaId);
         return Response.deleted();
     }
 }

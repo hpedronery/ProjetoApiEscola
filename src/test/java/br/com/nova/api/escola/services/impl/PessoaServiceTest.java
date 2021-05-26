@@ -18,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -75,7 +74,7 @@ public class PessoaServiceTest {
     public void testarBuscaPorId_RegistroExiste() {
         Pessoa pessoa = getMockPessoa();
         when(pessoaRepository.findById(pessoa.getId())).thenReturn(Optional.of(pessoa));
-        Pessoa pessoaBuscada = service().buscarPeloId(pessoa.getId());
+        Pessoa pessoaBuscada = service().buscaPessoaPeloId(pessoa.getId());
         assertEquals(pessoa.getId(), pessoaBuscada.getId());
     }
 
@@ -83,7 +82,7 @@ public class PessoaServiceTest {
     public void testarBuscaPorId_RegistroNaoExiste() {
         Pessoa pessoa = getMockPessoa();
         when(pessoaRepository.findById(pessoa.getId())).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> service().buscarPeloId(pessoa.getId()));
+        assertThrows(NotFoundException.class, () -> service().buscaPessoaPeloId(pessoa.getId()));
     }
 
     @Test
@@ -91,8 +90,8 @@ public class PessoaServiceTest {
         Pessoa pessoa = getMockPessoa();
         when(pessoaRepository.findByEscolaId(pessoa.getEscola().getId())).thenReturn(Optional.empty());
         System.out.println("SO PRA SABE");
-        System.out.println(service().buscarPelaEscolaId(pessoa.getEscola().getId()).get(0).getId());
-        List<Pessoa> pessoaBuscada = service().buscarPelaEscolaId(pessoa.getEscola().getId());
+        System.out.println(service().buscaPessoaPelaEscolaId(pessoa.getEscola().getId()).get(0).getId());
+        List<Pessoa> pessoaBuscada = service().buscaPessoaPelaEscolaId(pessoa.getEscola().getId());
         assertEquals(pessoa.getId(), pessoaBuscada.get(0).getId());
     }
 
@@ -100,7 +99,7 @@ public class PessoaServiceTest {
     public void testarBuscaPorEscolaId_RegistroNaoExiste() {
         Pessoa pessoa = getMockPessoa();
         when(pessoaRepository.findByEscolaId(pessoa.getEscola().getId())).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> service().buscarPelaEscolaId(pessoa.getEscola().getId()).get(0));
+        assertThrows(NotFoundException.class, () -> service().buscaPessoaPelaEscolaId(pessoa.getEscola().getId()).get(0));
     }
 
     @Test
@@ -111,7 +110,7 @@ public class PessoaServiceTest {
         pessoaFetchRequest.setNome(pessoa.getNome());
         pessoaFetchRequest.setCorpo(pessoa.getCorpo());
         pessoaFetchRequest.setSexo(pessoa.getSexo());
-        List<Pessoa> pessoas = service().buscarListaPessoas(pessoaFetchRequest);
+        List<Pessoa> pessoas = service().buscaListaPessoas(pessoaFetchRequest);
         assertEquals(1, pessoas.size());
         assertEquals(pessoa.getId(), pessoas.get(0).getId());
         assertEquals(pessoa.getNome(), pessoas.get(0).getNome());
@@ -123,14 +122,14 @@ public class PessoaServiceTest {
     public void testarBuscaPessoasPeloNomeSexoCorpoEscolar_NaoExistem() {
         Pessoa pessoa = getMockPessoa();
         when(pessoaRepository.findById(pessoa.getId())).thenReturn(Optional.empty());
-        assertThrows(IndexOutOfBoundsException.class, () -> service().buscarListaPessoas(new PessoaFetchRequest()).get(0));
+        assertThrows(IndexOutOfBoundsException.class, () -> service().buscaListaPessoas(new PessoaFetchRequest()).get(0));
     }
 
     @Test
     public void testarSalvarPessoa() {
         Pessoa pessoa = getMockPessoa();
         when(pessoaRepository.save(Mockito.any())).thenReturn(pessoa);
-        Pessoa pessoaSalva = service().salvarPessoa(new PessoaCreateRequest());
+        Pessoa pessoaSalva = service().criaPessoa(new PessoaCreateRequest());
         assertEquals(pessoa.getId(), pessoaSalva.getId());
     }
 
@@ -141,7 +140,7 @@ public class PessoaServiceTest {
         Pessoa pessoa = getMockPessoa();
         when(pessoaRepository.findById(pessoa.getId())).thenReturn(Optional.of(pessoa));
         when(pessoaRepository.save(Mockito.any())).thenReturn(pessoa);
-        Pessoa pessoaSalva = service().alterarNomePessoa(pessoa.getId(), pessoaNomeChangeRequest);
+        Pessoa pessoaSalva = service().alteraNomePessoa(pessoa.getId(), pessoaNomeChangeRequest);
         assertEquals(pessoaNomeChangeRequest.getNome(), pessoaSalva.getNome());
     }
 
@@ -151,7 +150,7 @@ public class PessoaServiceTest {
         when(pessoaRepository.findById(pessoa.getId())).thenReturn(Optional.empty());
         when(pessoaRepository.save(Mockito.any())).thenReturn(pessoa);
         assertThrows(NotFoundException.class, () -> service()
-                .alterarNomePessoa(pessoa.getId(), new PessoaNomeChangeRequest()));
+                .alteraNomePessoa(pessoa.getId(), new PessoaNomeChangeRequest()));
     }
 
     @Test
@@ -161,7 +160,7 @@ public class PessoaServiceTest {
         Pessoa pessoa = getMockPessoa();
         when(pessoaRepository.findById(pessoa.getId())).thenReturn(Optional.of(pessoa));
         when(pessoaRepository.save(Mockito.any())).thenReturn(pessoa);
-        Pessoa pessoaSalva = service().alterarSexoPessoa(pessoa.getId(), pessoaSexoChangeRequest);
+        Pessoa pessoaSalva = service().alteraSexoPessoa(pessoa.getId(), pessoaSexoChangeRequest);
         assertEquals(pessoaSexoChangeRequest.getSexo().getNome(), pessoaSalva.getSexo().getNome());
     }
 
@@ -172,7 +171,7 @@ public class PessoaServiceTest {
         Pessoa pessoa = getMockPessoa();
         when(pessoaRepository.findById(pessoa.getId())).thenReturn(Optional.of(pessoa));
         when(pessoaRepository.save(Mockito.any())).thenReturn(pessoa);
-        Pessoa pessoaSalva = service().alterarCorpoPessoa(pessoa.getId(), pessoaCorpoChangeRequest);
+        Pessoa pessoaSalva = service().alteraCorpoEscolarPessoa(pessoa.getId(), pessoaCorpoChangeRequest);
         assertEquals(pessoaCorpoChangeRequest.getCorpo().getNome(), pessoaSalva.getCorpo().getNome());
     }
 
@@ -180,7 +179,7 @@ public class PessoaServiceTest {
     @Test
     public void testaDeletarPessoa_PessoaExiste() {
         Pessoa pessoa = getMockPessoa();
-        service().deletarPessoa(pessoa.getId());
+        service().deletaPessoa(pessoa.getId());
         verify(pessoaRepository, Mockito.times(1)).deleteById(pessoa.getId());
     }
 
@@ -188,13 +187,13 @@ public class PessoaServiceTest {
     public void testaDeletarCidade_CidadeNaoExiste() {
         Pessoa pessoa = getMockPessoa();
         doThrow(EmptyResultDataAccessException.class).when(pessoaRepository).deleteById(pessoa.getId());
-        assertThrows(NotFoundException.class, () -> service().deletarPessoa(pessoa.getId()));
+        assertThrows(NotFoundException.class, () -> service().deletaPessoa(pessoa.getId()));
     }
 
     @Test
     public void testaDeletarCidade_ErroInterno() {
         Pessoa pessoa = getMockPessoa();
         doThrow(GenericException.class).when(pessoaRepository).deleteById(pessoa.getId());
-        assertThrows(GenericException.class, () -> service().deletarPessoa(pessoa.getId()));
+        assertThrows(GenericException.class, () -> service().deletaPessoa(pessoa.getId()));
     }
 }

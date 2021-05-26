@@ -1,0 +1,11 @@
+{
+  "id": 3,
+  "nome": "Escola",
+  "redeEscola": "EM",
+  "cidade": {
+    "id": 2,
+    "nome": "Ubá",
+    "estado": "MG"
+  }
+}
+

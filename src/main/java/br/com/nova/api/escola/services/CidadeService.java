@@ -11,15 +11,15 @@ import java.util.List;
 
 public interface CidadeService {
 
-    Cidade buscarPeloId(long cidadeId);
+    Cidade buscaCidadePeloId(long cidadeId);
 
     List<Cidade> buscaListaDeCidades(CidadeFetchRequest cidadeFetchRequest);
 
-    Cidade salvarCidade(@Valid CidadeCreateRequest cidadeCreateRequest);
+    Cidade criaCidade(@Valid CidadeCreateRequest cidadeCreateRequest);
 
-    Cidade alterarNomeCidade(long cidadeId, CidadeNomeChangeRequest cidadeNomeChangeRequest);
+    Cidade alteraNomeCidade(long cidadeId, CidadeNomeChangeRequest cidadeNomeChangeRequest);
 
-    Cidade alterarEstadoCidade(long cidadeId, CidadeEstadoChangeRequest cidadeEstadoChangeRequest);
+    Cidade alteraEstadoCidade(long cidadeId, CidadeEstadoChangeRequest cidadeEstadoChangeRequest);
 
-    void deletarCidade(long cidadeId);
+    void deletaCidade(long cidadeId);
 }

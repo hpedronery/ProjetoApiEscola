@@ -1,17 +1,11 @@
 package br.com.nova.api.escola.services.impl;
 
 import br.com.nova.api.escola.configs.ModelMapperConfig;
-import br.com.nova.api.escola.dtos.cidade.CidadeCreateRequest;
-import br.com.nova.api.escola.dtos.cidade.CidadeEstadoChangeRequest;
-import br.com.nova.api.escola.dtos.cidade.CidadeFetchRequest;
-import br.com.nova.api.escola.dtos.cidade.CidadeNomeChangeRequest;
 import br.com.nova.api.escola.dtos.escola.*;
-import br.com.nova.api.escola.enums.EstadoEnum;
 import br.com.nova.api.escola.enums.RedeEscolaEnum;
 import br.com.nova.api.escola.exceptions.GenericException;
 import br.com.nova.api.escola.exceptions.NotFoundException;
 import br.com.nova.api.escola.model.Cidade;
-import br.com.nova.api.escola.model.Escola;
 import br.com.nova.api.escola.model.Escola;
 import br.com.nova.api.escola.repositories.CidadeRepository;
 import br.com.nova.api.escola.repositories.EscolaRepository;
@@ -65,7 +59,7 @@ public class EscolaServiceTest {
     public void testarBuscaPorId_RegistroExiste() {
         Escola escola = getMockEscola();
         when(escolaRepository.findById(escola.getId())).thenReturn(Optional.of(escola));
-        Escola escolaBuscada = service().buscarPeloId(escola.getId());
+        Escola escolaBuscada = service().buscaEscolaPeloId(escola.getId());
         assertEquals(escola.getId(), escolaBuscada.getId());
     }
 
@@ -73,7 +67,7 @@ public class EscolaServiceTest {
     public void testarBuscaPorId_RegistroNaoExiste() {
         Escola escola = getMockEscola();
         when(escolaRepository.findById(escola.getId())).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> service().buscarPeloId(escola.getId()));
+        assertThrows(NotFoundException.class, () -> service().buscaEscolaPeloId(escola.getId()));
     }
 
     @Test
@@ -83,7 +77,7 @@ public class EscolaServiceTest {
         when(escolaRepository.findAll(Mockito.any())).thenReturn(Collections.singletonList(escola));
         escolaFetchRequest.setNome(escola.getNome());
         escolaFetchRequest.setRedeEscola(escola.getRedeEscola());
-        List<Escola> escolas = service().buscaListaEscolas(escolaFetchRequest);
+        List<Escola> escolas = service().buscaListaEscolasPeloNomeOuRedeEscolar(escolaFetchRequest);
         assertEquals(1, escolas.size());
         assertEquals(escola.getId(), escolas.get(0).getId());
         assertEquals(escola.getRedeEscola(), escolas.get(0).getRedeEscola());
@@ -95,7 +89,7 @@ public class EscolaServiceTest {
         Cidade cidade = getMockCidade();
         List<Escola> escolas = new ArrayList<>();
         when(escolaRepository.findByCidadeId(escola.getCidade().getId())).thenReturn(escolas);
-        escolas.add(service().buscarPelaCidadeId(escola.getCidade().getId()).get(0));
+        escolas.add(service().buscaEscolaPelaCidadeId(escola.getCidade().getId()).get(0));
         assertEquals(escola.getCidade().getId(), escolas.get(0).getCidade().getId());
     }
 
@@ -104,14 +98,14 @@ public class EscolaServiceTest {
         Escola escola = getMockEscola();
         List<Escola> escolas = new ArrayList<>();
         when(escolaRepository.findByCidadeId(escola.getCidade().getId())).thenReturn(escolas);
-        assertThrows(NotFoundException.class, () -> service().buscarPeloId(escola.getId()));
+        assertThrows(NotFoundException.class, () -> service().buscaEscolaPeloId(escola.getId()));
     }
 
     @Test
     public void testarSalvarEscola() {
         Escola escola = getMockEscola();
         when(escolaRepository.save(Mockito.any())).thenReturn(escola);
-        Escola escolaSalva = service().salvarEscola(new EscolaCreateRequest());
+        Escola escolaSalva = service().criaEscola(new EscolaCreateRequest());
         assertEquals(escola.getId(), escolaSalva.getId());
     }
 
@@ -122,7 +116,7 @@ public class EscolaServiceTest {
         Escola escola = getMockEscola();
         when(escolaRepository.findById(escola.getId())).thenReturn(Optional.of(escola));
         when(escolaRepository.save(Mockito.any())).thenReturn(escola);
-        Escola escolaSalva = service().alterarNomeEscola(escola.getId(), escolaNomeChangeRequest);
+        Escola escolaSalva = service().alteraNomeEscola(escola.getId(), escolaNomeChangeRequest);
         assertEquals(escolaNomeChangeRequest.getNome(), escolaSalva.getNome());
     }
 
@@ -132,7 +126,7 @@ public class EscolaServiceTest {
         when(escolaRepository.findById(escola.getId())).thenReturn(Optional.empty());
         when(escolaRepository.save(Mockito.any())).thenReturn(escola);
         assertThrows(NotFoundException.class, () -> service()
-                .alterarNomeEscola(escola.getId(), new EscolaNomeChangeRequest()));
+                .alteraNomeEscola(escola.getId(), new EscolaNomeChangeRequest()));
     }
 
     @Test
@@ -144,7 +138,7 @@ public class EscolaServiceTest {
         when(cidadeRepository.save(Mockito.any())).thenReturn(cidadeNova);
         when(escolaRepository.findById(escola.getId())).thenReturn(Optional.of(escola));
         when(escolaRepository.save(Mockito.any())).thenReturn(escola);
-        Escola escolaSalva = service().alterarCidadeEscola(escola.getId(), cidadeNova.getId());
+        Escola escolaSalva = service().alteraCidadeEscola(escola.getId(), cidadeNova.getId());
         assertEquals(cidadeNova.getId(), escolaSalva.getCidade().getId());
     }
 
@@ -154,7 +148,7 @@ public class EscolaServiceTest {
         when(escolaRepository.findById(escola.getId())).thenReturn(Optional.of(escola));
         when(escolaRepository.save(Mockito.any())).thenReturn(escola);
         assertThrows(NotFoundException.class, () -> service()
-                .alterarCidadeEscola(escola.getId(), new Cidade().getId()));
+                .alteraCidadeEscola(escola.getId(), new Cidade().getId()));
     }
 
     @Test
@@ -164,7 +158,7 @@ public class EscolaServiceTest {
         Escola escola = getMockEscola();
         when(escolaRepository.findById(escola.getId())).thenReturn(Optional.of(escola));
         when(escolaRepository.save(Mockito.any())).thenReturn(escola);
-        Escola escolaSalva = service().alterarRedeEscola(escola.getId(), escolaRedeChangeRequest);
+        Escola escolaSalva = service().alteraRedeEscola(escola.getId(), escolaRedeChangeRequest);
         assertEquals(escolaRedeChangeRequest.getRedeEscola(), escolaSalva.getRedeEscola());
     }
 
@@ -173,14 +167,14 @@ public class EscolaServiceTest {
         Escola escola = getMockEscola();
         when(escolaRepository.findById(escola.getId())).thenReturn(Optional.empty());
         when(escolaRepository.save(Mockito.any())).thenReturn(escola);
-        assertThrows(NotFoundException.class, () -> service().alterarRedeEscola(escola.getId(),
+        assertThrows(NotFoundException.class, () -> service().alteraRedeEscola(escola.getId(),
                 new EscolaRedeChangeRequest()));
     }
 
     @Test
     public void testaDeletarEscola_EscolaExiste() {
         Escola escola = getMockEscola();
-        service().deletarEscola(escola.getId());
+        service().deletaEscola(escola.getId());
         verify(escolaRepository, Mockito.times(1)).deleteById(escola.getId());
     }
 
@@ -188,13 +182,13 @@ public class EscolaServiceTest {
     public void testaDeletarCidade_CidadeNaoExiste() {
         Escola escola = getMockEscola();
         doThrow(EmptyResultDataAccessException.class).when(escolaRepository).deleteById(escola.getId());
-        assertThrows(NotFoundException.class, () -> service().deletarEscola(escola.getId()));
+        assertThrows(NotFoundException.class, () -> service().deletaEscola(escola.getId()));
     }
 
     @Test
     public void testaDeletarCidade_ErroInterno() {
         Escola escola = getMockEscola();
         doThrow(GenericException.class).when(escolaRepository).deleteById(escola.getId());
-        assertThrows(GenericException.class, () -> service().deletarEscola(escola.getId()));
+        assertThrows(GenericException.class, () -> service().deletaEscola(escola.getId()));
     }
 }

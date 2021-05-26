@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Api(value = "EscolaLeituraResource", tags = {"Cidades, Leitura"})
+@Api(value = "CidadeLeituraResource", tags = {"Cidades, Leitura"})
 @RestController
 @RequestMapping(value = "/cidades")
 public class CidadeLeituraResource {
@@ -45,7 +45,7 @@ public class CidadeLeituraResource {
             value = {@ApiResponse(code = 200, message = "Cidade(s) consultada(s) com sucesso.")}
     )
     @GetMapping
-    public Response<List<CidadeRetornoDto>> buscarCidades(CidadeFetchRequest cidadeFetchRequest) {
+    public Response<List<CidadeRetornoDto>> buscaCidadePeloNomeEEstado(CidadeFetchRequest cidadeFetchRequest) {
         List<Cidade> cidades = cidadeService.buscaListaDeCidades(cidadeFetchRequest);
         return Response.ok(modelMapper.map(cidades, new TypeToken<List<CidadeRetornoDto>>() {
         }.getType()));
@@ -60,7 +60,7 @@ public class CidadeLeituraResource {
     )
     @GetMapping("/{cidadeId}")
     public Response<CidadeRetornoDto> buscaCidadePeloId(@PathVariable long cidadeId) {
-        Cidade cidade = cidadeService.buscarPeloId(cidadeId);
+        Cidade cidade = cidadeService.buscaCidadePeloId(cidadeId);
         return Response.ok(modelMapper.map(cidade, CidadeRetornoDto.class));
     }
 }

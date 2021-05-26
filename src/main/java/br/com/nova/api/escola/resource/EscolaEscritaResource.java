@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/escolas")
 public class EscolaEscritaResource {
 
+    /**
+     * Classe responsável por alterar/criar/deletar dados de uma escola
+     */
+
     private final EscolaService escolaService;
     private final ModelMapper modelMapper;
 
@@ -28,20 +32,6 @@ public class EscolaEscritaResource {
     }
 
     @ApiOperation(
-            value = "Insere/Cria uma nova Escola.",
-            notes = "Recurso responsável por Inserir/Criar uma nova Escola."
-    )
-    @ApiResponses(
-            value = {@ApiResponse(code = 201, message = "Escola inserida/criada com sucesso."),
-                    @ApiResponse(code = 400, message = "Erros de validação na requisição")})
-    @ResponseStatus(value = HttpStatus.CREATED)
-    @PostMapping
-    public Response<EscolaRetornoDto> criarEscola(@RequestBody EscolaCreateRequest escolaCreateRequest) {
-        Escola escola = escolaService.salvarEscola(escolaCreateRequest);
-        return Response.created(modelMapper.map(escola, EscolaRetornoDto.class));
-    }
-
-    @ApiOperation(
             value = "Altera o nome de uma Escola.",
             notes = "Recurso responsável por alterar o nome de uma Escola."
     )
@@ -49,9 +39,9 @@ public class EscolaEscritaResource {
             value = {@ApiResponse(code = 200, message = "Nome da escola alterado com sucesso."),
                     @ApiResponse(code = 404, message = "Recursos necessários inválidos ou não encontrados.")})
     @PatchMapping("/alterarNome/{escolaId}")
-    public Response<String> alterarNomeEscola(@PathVariable long escolaId,
-                                              @RequestBody EscolaNomeChangeRequest escolaNomeChangeRequest) {
-        Escola escola = escolaService.alterarNomeEscola(escolaId, escolaNomeChangeRequest);
+    public Response<String> alteraNomeEscola(@PathVariable long escolaId,
+                                             @RequestBody EscolaNomeChangeRequest escolaNomeChangeRequest) {
+        Escola escola = escolaService.alteraNomeEscola(escolaId, escolaNomeChangeRequest);
         return Response.ok(escola.getNome());
     }
 
@@ -63,9 +53,9 @@ public class EscolaEscritaResource {
             value = {@ApiResponse(code = 200, message = "Rede da escola alterado com sucesso."),
                     @ApiResponse(code = 404, message = "Recursos necessários inválidos ou não encontrados.")})
     @PatchMapping("/alterarRede/{escolaId}")
-    public Response<String> alterarRedeEscola(@PathVariable long escolaId,
-                                              @RequestBody EscolaRedeChangeRequest escolaRedeChangeRequest) {
-        Escola escola = escolaService.alterarRedeEscola(escolaId, escolaRedeChangeRequest);
+    public Response<String> alteraRedeEscola(@PathVariable long escolaId,
+                                             @RequestBody EscolaRedeChangeRequest escolaRedeChangeRequest) {
+        Escola escola = escolaService.alteraRedeEscola(escolaId, escolaRedeChangeRequest);
         return Response.ok(escola.getRedeEscola().getNome());
     }
 
@@ -77,10 +67,24 @@ public class EscolaEscritaResource {
             value = {@ApiResponse(code = 200, message = "Cidade da escola alterado com sucesso."),
                     @ApiResponse(code = 404, message = "Recursos necessários inválidos ou não encontrados.")})
     @PatchMapping("/alterarCidade/{escolaId}")
-    public Response<String> alterarCidadeEscola(@PathVariable long escolaId,
-                                                @RequestBody EscolaCidadeChangeRequest escolaCidadeChangeRequest) {
-        Escola escola = escolaService.alterarCidadeEscola(escolaId, escolaCidadeChangeRequest.getNovaCidadeId());
+    public Response<String> alteraCidadeEscola(@PathVariable long escolaId,
+                                               @RequestBody EscolaCidadeChangeRequest escolaCidadeChangeRequest) {
+        Escola escola = escolaService.alteraCidadeEscola(escolaId, escolaCidadeChangeRequest.getNovaCidadeId());
         return Response.ok(escola.getCidade().getNome());
+    }
+
+    @ApiOperation(
+            value = "Insere/Cria uma nova Escola.",
+            notes = "Recurso responsável por Inserir/Criar uma nova Escola."
+    )
+    @ApiResponses(
+            value = {@ApiResponse(code = 201, message = "Escola inserida/criada com sucesso."),
+                    @ApiResponse(code = 400, message = "Erros de validação na requisição")})
+    @ResponseStatus(value = HttpStatus.CREATED)
+    @PostMapping
+    public Response<EscolaRetornoDto> criaEscola(@RequestBody EscolaCreateRequest escolaCreateRequest) {
+        Escola escola = escolaService.criaEscola(escolaCreateRequest);
+        return Response.created(modelMapper.map(escola, EscolaRetornoDto.class));
     }
 
     @ApiOperation(
@@ -92,8 +96,8 @@ public class EscolaEscritaResource {
                     @ApiResponse(code = 404, message = "Recursos necessários inválidos ou não encontrados.")})
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @DeleteMapping("/{escolaId}")
-    public Response<Void> deletarEscola(@PathVariable long escolaId) {
-        escolaService.deletarEscola(escolaId);
+    public Response<Void> deletaEscola(@PathVariable long escolaId) {
+        escolaService.deletaEscola(escolaId);
         return Response.deleted();
     }
 }

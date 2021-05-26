@@ -55,7 +55,7 @@ public class CidadeServiceTest {
     public void testarBuscaPorId_RegistroExiste() {
         Cidade cidade = getMock();
         when(cidadeRepository.findById(cidade.getId())).thenReturn(Optional.of(cidade));
-        Cidade cidadeBuscada = service().buscarPeloId(cidade.getId());
+        Cidade cidadeBuscada = service().buscaCidadePeloId(cidade.getId());
         assertEquals(cidade.getId(), cidadeBuscada.getId());
     }
 
@@ -63,7 +63,7 @@ public class CidadeServiceTest {
     public void testarBuscaPorId_RegistroNaoExiste() {
         Cidade cidade = getMock();
         when(cidadeRepository.findById(cidade.getId())).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> service().buscarPeloId(cidade.getId()));
+        assertThrows(NotFoundException.class, () -> service().buscaCidadePeloId(cidade.getId()));
     }
 
     @Test
@@ -83,7 +83,7 @@ public class CidadeServiceTest {
     public void testarSalvarCidade() {
         Cidade cidade = getMock();
         when(cidadeRepository.save(Mockito.any())).thenReturn(cidade);
-        Cidade cidadeSalva = service().salvarCidade(new CidadeCreateRequest());
+        Cidade cidadeSalva = service().criaCidade(new CidadeCreateRequest());
         assertEquals(cidade.getId(), cidadeSalva.getId());
     }
 
@@ -94,7 +94,7 @@ public class CidadeServiceTest {
         Cidade cidade = getMock();
         when(cidadeRepository.findById(cidade.getId())).thenReturn(Optional.of(cidade));
         when(cidadeRepository.save(Mockito.any())).thenReturn(cidade);
-        Cidade cidadeSalva = service().alterarNomeCidade(cidade.getId(), cidadeNomeChangeRequest);
+        Cidade cidadeSalva = service().alteraNomeCidade(cidade.getId(), cidadeNomeChangeRequest);
         assertEquals(cidadeNomeChangeRequest.getNome(), cidadeSalva.getNome());
     }
 
@@ -103,7 +103,7 @@ public class CidadeServiceTest {
         Cidade cidade = getMock();
         when(cidadeRepository.findById(cidade.getId())).thenReturn(Optional.empty());
         when(cidadeRepository.save(Mockito.any())).thenReturn(cidade);
-        assertThrows(NotFoundException.class, () -> service().alterarNomeCidade(cidade.getId(), new CidadeNomeChangeRequest()));
+        assertThrows(NotFoundException.class, () -> service().alteraNomeCidade(cidade.getId(), new CidadeNomeChangeRequest()));
     }
 
     @Test
@@ -113,7 +113,7 @@ public class CidadeServiceTest {
         Cidade cidade = getMock();
         when(cidadeRepository.findById(cidade.getId())).thenReturn(Optional.of(cidade));
         when(cidadeRepository.save(Mockito.any())).thenReturn(cidade);
-        Cidade cidadeSalva = service().alterarEstadoCidade(cidade.getId(), cidadeEstadoChangeRequest);
+        Cidade cidadeSalva = service().alteraEstadoCidade(cidade.getId(), cidadeEstadoChangeRequest);
         assertEquals(cidadeEstadoChangeRequest.getEstado(), cidadeSalva.getEstado());
     }
 
@@ -122,13 +122,13 @@ public class CidadeServiceTest {
         Cidade cidade = getMock();
         when(cidadeRepository.findById(cidade.getId())).thenReturn(Optional.empty());
         when(cidadeRepository.save(Mockito.any())).thenReturn(cidade);
-        assertThrows(NotFoundException.class, () -> service().alterarEstadoCidade(cidade.getId(), new CidadeEstadoChangeRequest()));
+        assertThrows(NotFoundException.class, () -> service().alteraEstadoCidade(cidade.getId(), new CidadeEstadoChangeRequest()));
     }
 
     @Test
     public void testaDeletarCidade_CidadeExiste() {
         Cidade cidade = getMock();
-        service().deletarCidade(cidade.getId());
+        service().deletaCidade(cidade.getId());
         verify(cidadeRepository, Mockito.times(1)).deleteById(cidade.getId());
     }
 
@@ -136,13 +136,13 @@ public class CidadeServiceTest {
     public void testaDeletarCidade_CidadeNaoExiste() {
         Cidade cidade = getMock();
         doThrow(EmptyResultDataAccessException.class).when(cidadeRepository).deleteById(cidade.getId());
-        assertThrows(NotFoundException.class, () -> service().deletarCidade(cidade.getId()));
+        assertThrows(NotFoundException.class, () -> service().deletaCidade(cidade.getId()));
     }
 
     @Test
     public void testaDeletarCidade_ErroInterno() {
         Cidade cidade = getMock();
         doThrow(GenericException.class).when(cidadeRepository).deleteById(cidade.getId());
-        assertThrows(GenericException.class, () -> service().deletarCidade(cidade.getId()));
+        assertThrows(GenericException.class, () -> service().deletaCidade(cidade.getId()));
     }
 }

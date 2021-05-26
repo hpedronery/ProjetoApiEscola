@@ -30,62 +30,88 @@ public class PessoaServiceImpl implements PessoaService {
         this.modelMapper = modelMapper;
     }
 
+    /**
+     * Abaixo seguem metodos de busca, eles utilizam o identificador long quando se busca pelo id ou uma classe dto
+     * quando se busca por algum argumento.
+     *
+     * @return retorna o(s) objeto(s) da busca.
+     */
+
     @Override
-    public List<Pessoa> buscarListaPessoas(PessoaFetchRequest pessoaFetchRequest) {
+    public List<Pessoa> buscaListaPessoas(PessoaFetchRequest pessoaFetchRequest) {
         PessoaSpecification pessoaSpecification = new PessoaSpecification(pessoaFetchRequest);
         return pessoaRepository.findAll(pessoaSpecification);
     }
 
     @Override
-    public List<Pessoa> buscarPelaEscolaId(long escolaId) {
+    public List<Pessoa> buscaPessoaPelaEscolaId(long escolaId) {
         List<Pessoa> pessoas = pessoaRepository.findByEscolaId(escolaId)
                 .orElseThrow(() -> new NotFoundException(MessageUtils.buscarMensagem("pessoa.escola.nao.encontrada"), escolaId));
         return pessoas;
     }
 
     @Override
-    public Pessoa buscarPeloId(long pessoaId) {
+    public Pessoa buscaPessoaPeloId(long pessoaId) {
         return pessoaRepository.findById(pessoaId)
                 .orElseThrow(() -> new NotFoundException(MessageUtils.buscarMensagem("pessoa.nao.encontrada"), pessoaId));
     }
 
-    @Override
-    public Pessoa salvarPessoa(PessoaCreateRequest pessoaCreateRequest) {
-        Pessoa pessoa = modelMapper.map(pessoaCreateRequest, Pessoa.class);
-        return pessoaRepository.save(pessoa);
-    }
+    /**
+     * Abaixo seguem metodos de alteração, eles utilizam o identificador long quando se busca pelo id ou uma classe
+     * dto quando se busca por algum argumento.
+     *
+     * @return retorna o objeto alterado.
+     */
 
     @Override
-    public Pessoa alterarNomePessoa(long pessoaId, PessoaNomeChangeRequest pessoaNomeChangeRequest) {
-        Pessoa pessoa = buscarPeloId(pessoaId);
+    public Pessoa alteraNomePessoa(long pessoaId, PessoaNomeChangeRequest pessoaNomeChangeRequest) {
+        Pessoa pessoa = buscaPessoaPeloId(pessoaId);
         pessoa.setNome(pessoaNomeChangeRequest.getNome());
         return pessoaRepository.save(pessoa);
     }
 
     @Override
-    public Pessoa alterarCorpoPessoa(long pessoaId, PessoaCorpoChangeRequest pessoaCorpoChangeRequest) {
-        Pessoa pessoa = buscarPeloId(pessoaId);
+    public Pessoa alteraCorpoEscolarPessoa(long pessoaId, PessoaCorpoChangeRequest pessoaCorpoChangeRequest) {
+        Pessoa pessoa = buscaPessoaPeloId(pessoaId);
         pessoa.setCorpo(pessoaCorpoChangeRequest.getCorpo());
         return pessoaRepository.save(pessoa);
     }
 
     @Override
-    public Pessoa alterarSexoPessoa(long pessoaId, PessoaSexoChangeRequest pessoaSexoChangeRequest) {
-        Pessoa pessoa = buscarPeloId(pessoaId);
+    public Pessoa alteraSexoPessoa(long pessoaId, PessoaSexoChangeRequest pessoaSexoChangeRequest) {
+        Pessoa pessoa = buscaPessoaPeloId(pessoaId);
         pessoa.setSexo(pessoaSexoChangeRequest.getSexo());
         return pessoaRepository.save(pessoa);
     }
 
     @Override
-    public void deletarPessoa(long pessoaId) {
-        Pessoa pessoa = buscarPeloId(pessoaId);
-        pessoaRepository.delete(pessoa);
-    }
-
-    @Override
-    public Pessoa alterarDataNascimento(long pessoaId, PessoaDataNascimentoChangeRequest pessoaDataNascimentoChangeRequest) {
-        Pessoa pessoa = buscarPeloId(pessoaId);
+    public Pessoa alteraDataNascimentoPessoa(long pessoaId, PessoaDataNascimentoChangeRequest pessoaDataNascimentoChangeRequest) {
+        Pessoa pessoa = buscaPessoaPeloId(pessoaId);
         pessoa.setDataNascimento(pessoaDataNascimentoChangeRequest.getDataNascimento());
         return pessoaRepository.save(pessoa);
+    }
+
+    /**
+     * Abaixo segue o metodo de criar, ele recebe a classe dto com os dados de criação e cria o objeto.
+     *
+     * @return retorna o objeto criado.
+     */
+
+    @Override
+    public Pessoa criaPessoa(PessoaCreateRequest pessoaCreateRequest) {
+        Pessoa pessoa = modelMapper.map(pessoaCreateRequest, Pessoa.class);
+        return pessoaRepository.save(pessoa);
+    }
+
+    /**
+     * Abaixo segue o metodo de deletar, ele recebe a classe dto com os dados de deleção e deleta o objeto.
+     *
+     * @return retorna o objeto deletado.
+     */
+
+    @Override
+    public void deletaPessoa(long pessoaId) {
+        Pessoa pessoa = buscaPessoaPeloId(pessoaId);
+        pessoaRepository.delete(pessoa);
     }
 }
