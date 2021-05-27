@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/escolas")
 public class EscolaEscritaResource {
 
-    /**
-     * Classe responsável por alterar/criar/deletar dados de uma escola
-     */
+//  Classe responsável por alterar/criar/deletar dados de uma escola
 
     private final EscolaService escolaService;
     private final ModelMapper modelMapper;

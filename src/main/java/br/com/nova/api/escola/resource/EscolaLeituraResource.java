@@ -24,9 +24,7 @@ import java.util.List;
 @RequestMapping(value = "/escolas")
 public class EscolaLeituraResource {
 
-    /**
-     * Classe responsável por realizar consulta de escolas de acordo com os parâmetros definidos.
-     */
+//  Classe responsável por realizar consulta de escolas de acordo com os parâmetros definidos.
 
     private final EscolaService escolaService;
     private final ModelMapper modelMapper;

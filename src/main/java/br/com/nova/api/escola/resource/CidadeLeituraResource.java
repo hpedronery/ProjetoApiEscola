@@ -24,9 +24,7 @@ import java.util.List;
 @RequestMapping(value = "/cidades")
 public class CidadeLeituraResource {
 
-    /**
-     * Classe responsável por realizar consulta de cidades de acordo com os parâmetros definidos.
-     */
+//  Classe responsável por realizar consulta de cidades de acordo com os parâmetros definidos.
 
     private final CidadeService cidadeService;
     private final ModelMapper modelMapper;

@@ -24,9 +24,7 @@ import java.util.List;
 @RequestMapping(value = "/pessoas")
 public class PessoaLeituraResource {
 
-    /**
-     * Classe responsável por realizar consulta de pessoas de acordo com os parâmetros definidos.
-     */
+//  Classe responsável por realizar consulta de pessoas de acordo com os parâmetros definidos.
 
     private final PessoaService pessoaService;
     private final ModelMapper modelMapper;

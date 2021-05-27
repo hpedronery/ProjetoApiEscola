@@ -50,9 +50,8 @@ public class CidadeServiceTest {
         return TestUtils.getMock(MOCK_FOLDER, MOCK_OBJECT, Cidade.class);
     }
 
-    /**
-     * Abaixo seguem os testes para os metodos de busca.
-     */
+
+//       Abaixo seguem os testes para os metodos de busca.
 
     @Test
     public void testaBuscaPorId_RegistroExiste() {
@@ -89,9 +88,8 @@ public class CidadeServiceTest {
         assertThrows(NullPointerException.class, () -> cidades.get(0));
     }
 
-    /**
-     * Abaixo seguem os testes para os métodos de alteração.
-     */
+
+//      Abaixo seguem os testes para os métodos de alteração.
 
     @Test
     public void testaAlterarNomeCidade_CidadeExiste() {
@@ -131,9 +129,8 @@ public class CidadeServiceTest {
         assertThrows(NotFoundException.class, () -> service().alteraEstadoCidade(cidade.getId(), new CidadeEstadoChangeRequest()));
     }
 
-    /**
-     * Abaixo segue o teste para o metodo de criar.
-     */
+
+//      Abaixo segue o teste para o metodo de criar.
 
     @Test
     public void testaCriaCidade() {
@@ -143,9 +140,8 @@ public class CidadeServiceTest {
         assertEquals(cidade.getId(), cidadeSalva.getId());
     }
 
-    /**
-     * Abaixo seguem os testes para o metodo de deletar.
-     */
+
+//     Abaixo seguem os testes para o metodo de deletar.
 
     @Test
     public void testaDeletarCidade_CidadeExiste() {

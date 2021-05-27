@@ -20,9 +20,7 @@ import java.time.LocalDate;
 @RequestMapping(value = "/pessoas")
 public class PessoaEscritaResource {
 
-    /**
-     * Classe responsável por alterar/criar/deletar dados de uma pessoa
-     */
+//  Classe responsável por alterar/criar/deletar dados de uma pessoa
 
     private final PessoaService pessoaService;
     private final ModelMapper modelMapper;

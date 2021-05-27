@@ -59,9 +59,7 @@ public class EscolaServiceTest {
         return TestUtils.getMock(MOCK_FOLDER_CIDADE, MOCK_OBJECT_CIDADE, Cidade.class);
     }
 
-    /**
-     * Abaixo seguem os testes para os metodos de busca.
-     */
+//       Abaixo seguem os testes para os metodos de busca.
 
     @Test
     public void testaBuscaEscolaPorId_RegistroExiste() {
@@ -107,9 +105,7 @@ public class EscolaServiceTest {
         assertThrows(NotFoundException.class, () -> service().buscaEscolaPeloId(escola.getId()));
     }
 
-    /**
-     * Abaixo seguem os testes para os métodos de alteração.
-     */
+//      Abaixo seguem os testes para os métodos de alteração.
 
     @Test
     public void testaAlterarNomeEscola_EscolaExiste() {
@@ -171,9 +167,7 @@ public class EscolaServiceTest {
                 new EscolaRedeChangeRequest()));
     }
 
-    /**
-     * Abaixo segue o teste para o metodo de criar.
-     */
+//      Abaixo segue o teste para o metodo de criar.
 
     @Test
     public void testarSalvarEscola() {
@@ -183,9 +177,7 @@ public class EscolaServiceTest {
         assertEquals(escola.getId(), escolaSalva.getId());
     }
 
-    /**
-     * Abaixo seguem os testes para o metodo de deletar.
-     */
+//     Abaixo seguem os testes para o metodo de deletar.
 
     @Test
     public void testaDeletarEscola_EscolaExiste() {
@@ -195,14 +187,14 @@ public class EscolaServiceTest {
     }
 
     @Test
-    public void testaDeletarCidade_CidadeNaoExiste() {
+    public void testaDeletaEscola_EscolaNaoExiste() {
         Escola escola = getMockEscola();
         doThrow(EmptyResultDataAccessException.class).when(escolaRepository).deleteById(escola.getId());
         assertThrows(NotFoundException.class, () -> service().deletaEscola(escola.getId()));
     }
 
     @Test
-    public void testaDeletarCidade_ErroInterno() {
+    public void testaDeletarEscola_ErroInterno() {
         Escola escola = getMockEscola();
         doThrow(GenericException.class).when(escolaRepository).deleteById(escola.getId());
         assertThrows(GenericException.class, () -> service().deletaEscola(escola.getId()));

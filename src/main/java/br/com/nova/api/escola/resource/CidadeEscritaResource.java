@@ -21,9 +21,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/cidades")
 public class CidadeEscritaResource {
 
-    /**
-     * Classe responsável por alterar/criar/deletar dados de uma cidade.
-     */
+
+//  Classe responsável por alterar/criar/deletar dados de uma cidade.
 
 
     private final CidadeService cidadeService;

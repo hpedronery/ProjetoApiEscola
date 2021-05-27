@@ -50,9 +50,8 @@ public class PessoaServiceTest {
         return TestUtils.getMock(MOCK_FOLDER_PESSOA, MOCK_OBJECT_PESSOA, Pessoa.class);
     }
 
-    /**
-     * Abaixo seguem os testes para os metodos de busca.
-     */
+
+//     Abaixo seguem os testes para os metodos de busca.
 
     @Test
     public void testarBuscaPorId_RegistroExiste() {
@@ -108,14 +107,6 @@ public class PessoaServiceTest {
     }
 
     @Test
-    public void testarSalvarPessoa() {
-        Pessoa pessoa = getMockPessoa();
-        when(pessoaRepository.save(Mockito.any())).thenReturn(pessoa);
-        Pessoa pessoaSalva = service().criaPessoa(new PessoaCreateRequest());
-        assertEquals(pessoa.getId(), pessoaSalva.getId());
-    }
-
-    @Test
     public void testaAlterarNomePessoa_PessoaExiste() {
         PessoaNomeChangeRequest pessoaNomeChangeRequest = new PessoaNomeChangeRequest();
         pessoaNomeChangeRequest.setNome("novo nome");
@@ -157,23 +148,33 @@ public class PessoaServiceTest {
         assertEquals(pessoaCorpoChangeRequest.getCorpo().getNome(), pessoaSalva.getCorpo().getNome());
     }
 
+//      Abaixo segue o teste para a criação de uma pessoa.
+    @Test
+    public void testaCriaPessoa() {
+        Pessoa pessoa = getMockPessoa();
+        when(pessoaRepository.save(Mockito.any())).thenReturn(pessoa);
+        Pessoa pessoaSalva = service().criaPessoa(new PessoaCreateRequest());
+        assertEquals(pessoa.getId(), pessoaSalva.getId());
+    }
+
+//    Abaixo seguem testes para a deleção de uma pessoa.
 
     @Test
-    public void testaDeletarPessoa_PessoaExiste() {
+    public void testaDeletaPessoa_PessoaExiste() {
         Pessoa pessoa = getMockPessoa();
         service().deletaPessoa(pessoa.getId());
         verify(pessoaRepository, Mockito.times(1)).deleteById(pessoa.getId());
     }
 
     @Test
-    public void testaDeletarCidade_CidadeNaoExiste() {
+    public void testaDeletaPessoa_PessoaNaoExiste() {
         Pessoa pessoa = getMockPessoa();
         doThrow(EmptyResultDataAccessException.class).when(pessoaRepository).deleteById(pessoa.getId());
         assertThrows(NotFoundException.class, () -> service().deletaPessoa(pessoa.getId()));
     }
 
     @Test
-    public void testaDeletarCidade_ErroInterno() {
+    public void testaDeletarPessoa_ErroInterno() {
         Pessoa pessoa = getMockPessoa();
         doThrow(GenericException.class).when(pessoaRepository).deleteById(pessoa.getId());
         assertThrows(GenericException.class, () -> service().deletaPessoa(pessoa.getId()));
